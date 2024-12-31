@@ -9,3 +9,6 @@
 
 #define MICROPY_HW_I2C0_SCL                 (9)
 #define MICROPY_HW_I2C0_SDA                 (8)
+
+#define MICROPY_PY_ULP                      (0)
+#define MICROPY_HW_MODULPADC                (1)
