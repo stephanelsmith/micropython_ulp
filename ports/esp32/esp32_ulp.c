@@ -227,14 +227,10 @@ static mp_obj_t esp32_ulp_rtc_deinit(mp_obj_t self_in, mp_obj_t pin_in) {
 static MP_DEFINE_CONST_FUN_OBJ_2(esp32_ulp_rtc_deinit_obj, esp32_ulp_rtc_deinit);
 
 
-static mp_obj_t esp32_ulp_adc_init(mp_obj_t self_in, mp_obj_t unit_in,  mp_obj_t channel_in) {
-    int unit = mp_obj_get_int(unit_in);
+static mp_obj_t esp32_ulp_adc_init(mp_obj_t self_in, mp_obj_t channel_in) {
     int channel = mp_obj_get_int(channel_in);
-    
-    if(unit < 0 || unit > SOC_ADC_PERIPH_NUM) mp_raise_ValueError(MP_ERROR_TEXT("invalid ADC unit"));
-
-     ulp_adc_cfg_t cfg = {
-        .adc_n    = unit,
+    ulp_adc_cfg_t cfg = {
+        .adc_n    = ADC_UNIT_1,
         .channel  = channel,
         #if CONFIG_IDF_TARGET_ESP32S2
         .width    = ADC_BITWIDTH_13,
@@ -242,14 +238,18 @@ static mp_obj_t esp32_ulp_adc_init(mp_obj_t self_in, mp_obj_t unit_in,  mp_obj_t
         .width    = ADC_BITWIDTH_12,
         #endif
         .atten    = ADC_ATTEN_DB_11,
+        #if TYPE_RISCV
         .ulp_mode = ADC_ULP_MODE_RISCV,
+        #else
+        .ulp_mode = ADC_ULP_MODE_FSM,
+        #endif
     };
     int _errno = ulp_adc_init(&cfg);
     if(_errno != 0) mp_raise_ValueError(MP_ERROR_TEXT("ADC unit already in use or invalid channel"));
 
     return mp_const_none;
 }
-static MP_DEFINE_CONST_FUN_OBJ_3(esp32_ulp_adc_init_obj, esp32_ulp_adc_init);
+static MP_DEFINE_CONST_FUN_OBJ_2(esp32_ulp_adc_init_obj, esp32_ulp_adc_init);
 
 
 static const mp_rom_map_elem_t esp32_ulp_locals_dict_table[] = {
@@ -264,7 +264,7 @@ static const mp_rom_map_elem_t esp32_ulp_locals_dict_table[] = {
     { MP_ROM_QSTR(MP_QSTR_write), MP_ROM_PTR(&esp32_ulp_write_obj) },
     { MP_ROM_QSTR(MP_QSTR_rtc_init), MP_ROM_PTR(&esp32_ulp_rtc_init_obj) },
     { MP_ROM_QSTR(MP_QSTR_rtc_deinit), MP_ROM_PTR(&esp32_ulp_rtc_deinit_obj) },
-    { MP_ROM_QSTR(MP_QSTR_adc_input), MP_ROM_PTR(&esp32_ulp_adc_init_obj) },
+    { MP_ROM_QSTR(MP_QSTR_adc_init), MP_ROM_PTR(&esp32_ulp_adc_init_obj) },
     { MP_ROM_QSTR(MP_QSTR_RESERVE_MEM), MP_ROM_INT(CONFIG_ULP_COPROC_RESERVE_MEM) },
     #ifdef ULP_EMBEDDED_APP
     #include "genhdr/esp32_ulpconst_qstr.h"    

@@ -65,11 +65,11 @@ def main():
 
     with open("../../genhdr/esp32_ulpconst_qstr.h", "wt") as h_file:
         for key, value in shared_variables.items():
+            addr = int(value, 0) - 0x5000_0000
             line = (
-                "{MP_ROM_QSTR(MP_QSTR_%s), MP_ROM_INT(0x%08x)},"
-                % (key, int(value, 16)-0x5000_0000)
+                "{MP_ROM_QSTR(MP_QSTR_%s), MP_ROM_INT(%d)},"
+                % (key, addr)
             )
-            print(line)
             h_file.write(line + '\n')
 
     #{MP_ROM_QSTR(MP_QSTR_VOLTAGE), MP_ROM_PTR( & mpz_50000130)},
