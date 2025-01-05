@@ -39,11 +39,11 @@ machine_adc_block_obj_t madcblock_obj[] = {
 };
 
 static void mp_machine_adc_block_print(const mp_print_t *print, machine_adc_block_obj_t *self) {
-   mp_printf(print, "ADCBlock(%u, bits=%u)", self->unit_id, self->bitwidth);
+    mp_printf(print, "ADCBlock(%u, bits=%u)", self->unit_id, self->bitwidth);
 }
 
 static void mp_machine_adc_block_bits_set(machine_adc_block_obj_t *self, mp_int_t bits) {
-   mp_machine_adc_block_width_set_helper(self, bits);
+    mp_machine_adc_block_width_set_helper(self, bits);
 }
 
 static machine_adc_block_obj_t *mp_machine_adc_block_get(mp_int_t unit) {

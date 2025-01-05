@@ -18,11 +18,11 @@ import re
 # Python 2/3 compatibility
 import platform
 
-def parse_file(filename):
 
+def parse_file(filename):
     regex_pattern = '(\w+)\s\=\s*(?:"([^"]*)"|(\S+))'
 
-    with open(filename, 'r') as file:
+    with open(filename, "r") as file:
         content = file.read()
 
     shared_variables = {}
@@ -30,7 +30,6 @@ def parse_file(filename):
     matches = re.findall(regex_pattern, content)
 
     for m in matches:
-
         variable = m[0]
         address = m[2]
         # Check if the key starts with "ulp_"
@@ -41,6 +40,7 @@ def parse_file(filename):
             shared_variables[variable.strip()] = address.strip()
 
     return shared_variables
+
 
 def main():
     cmd_parser = argparse.ArgumentParser(description="Extract ULP constants from a C header file.")
@@ -65,16 +65,14 @@ def main():
 
     with open("../../genhdr/esp32_ulpconst_qstr.h", "wt") as h_file:
         for key, value in shared_variables.items():
-            line = (
-                "{MP_ROM_QSTR(MP_QSTR_%s), MP_ROM_INT(0x%08x)},"
-                % (key, int(value, 16)-0x5000_0000)
-            )
-            print(line)
-            h_file.write(line + '\n')
+            addr = int(value, 0) - 0x5000_0000
+            line = "{MP_ROM_QSTR(MP_QSTR_%s), MP_ROM_INT(%d)}," % (key, addr)
+            h_file.write(line + "\n")
 
-    #{MP_ROM_QSTR(MP_QSTR_VOLTAGE), MP_ROM_PTR( & mpz_50000130)},
+    # {MP_ROM_QSTR(MP_QSTR_VOLTAGE), MP_ROM_PTR( & mpz_50000130)},
 
     return shared_variables
+
 
 if __name__ == "__main__":
     main()

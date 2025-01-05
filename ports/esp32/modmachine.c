@@ -160,12 +160,12 @@ static void machine_sleep_helper(wake_type_t wake_type, size_t n_args, const mp_
     #if SOC_ULP_SUPPORTED
     if (machine_rtc_config.wake_on_ulp) {
         #if CONFIG_IDF_TARGET_ESP32
-            /* Disconnect GPIO12 and GPIO15 to remove current drain through
-            * pullup/pulldown resistors on modules which have these (e.g. ESP32-WROVER)
-            * GPIO12 may be pulled high to select flash voltage.
-            */
-            rtc_gpio_isolate(GPIO_NUM_12);
-            rtc_gpio_isolate(GPIO_NUM_15);
+        /* Disconnect GPIO12 and GPIO15 to remove current drain through
+        * pullup/pulldown resistors on modules which have these (e.g. ESP32-WROVER)
+        * GPIO12 may be pulled high to select flash voltage.
+        */
+        rtc_gpio_isolate(GPIO_NUM_12);
+        rtc_gpio_isolate(GPIO_NUM_15);
         #endif // CONFIG_IDF_TARGET_ESP32
 
         if (esp_sleep_enable_ulp_wakeup() != ESP_OK) {

@@ -12,8 +12,6 @@
 #include "driver/i2s_std.h"
 #include "esp_wifi_types.h"
 
-#define MICROPY_DEBUG_PRINTERS (1)
-
 #ifndef MICROPY_CONFIG_ROM_LEVEL
 #define MICROPY_CONFIG_ROM_LEVEL            (MICROPY_CONFIG_ROM_LEVEL_EXTRA_FEATURES)
 #endif

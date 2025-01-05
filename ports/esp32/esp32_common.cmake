@@ -217,7 +217,7 @@ if(DEFINED ulp_embedded_sources)
         ${ulp_depentants} 
         "esp32_ulp.c"
     )
-    message("embedded ULP App sources: " ${ulp_sources} ",  deps: " ${ulp_depentants})
+    message("embedded ULP App sources: " ${ulp_embedded_sources} ",  deps: " ${ulp_depentants})
     ulp_embed_binary(${ulp_app_name} ${ulp_embedded_sources} ${ulp_depentants})
 
     set(ULP_LD_DIR ${CMAKE_BINARY_DIR}/esp-idf/main_${IDF_TARGET}/ulp_embedded)

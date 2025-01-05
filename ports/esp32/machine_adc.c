@@ -156,17 +156,17 @@ void madc_init_helper(const machine_adc_obj_t *self, size_t n_pos_args, const mp
     mp_arg_parse_all(n_pos_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
 
-    if(!self->block->handle){
+    if (!self->block->handle) {
         adc_oneshot_unit_init_cfg_t init_config = {
             .unit_id = self->block->unit_id
         };
         check_esp_err(adc_oneshot_new_unit(&init_config, &self->block->handle));
     }
-    
+
     mp_int_t atten = args[ARG_atten].u_int;
     mp_machine_adc_atten_set_helper(self, atten != -1 ? atten : ADC_ATTEN_MAX);
     mp_machine_adc_block_width_set_helper(self->block, ADC_WIDTH_MAX);
-    apply_self_adc_channel_atten(self,mp_machine_adc_atten_get_helper(self));
+    apply_self_adc_channel_atten(self, mp_machine_adc_atten_get_helper(self));
 
 }
 
@@ -174,9 +174,10 @@ static void mp_machine_adc_init_helper(machine_adc_obj_t *self, size_t n_pos_arg
     madc_init_helper(self, n_pos_args, pos_args, kw_args);
 }
 
-static void mp_machine_adc_deinit(machine_adc_obj_t *self){
-    if(self->block->handle)
+static void mp_machine_adc_deinit(machine_adc_obj_t *self) {
+    if (self->block->handle) {
         check_esp_err(adc_oneshot_del_unit(self->block->handle));
+    }
 }
 
 static mp_obj_t mp_machine_adc_make_new(const mp_obj_type_t *type, size_t n_pos_args, size_t n_kw_args, const mp_obj_t *args) {
@@ -216,34 +217,35 @@ static mp_int_t mp_machine_adc_read_uv(machine_adc_obj_t *self) {
 }
 
 
-mp_int_t mp_machine_adc_atten_get_helper(const machine_adc_obj_t *self){
+mp_int_t mp_machine_adc_atten_get_helper(const machine_adc_obj_t *self) {
     uint8_t value = madc_obj_atten[self - &madc_obj[0]];
     return value == 0 ? ADC_ATTEN_MAX : value - 1;
 }
 void mp_machine_adc_atten_set_helper(const machine_adc_obj_t *self, mp_int_t atten) {
-    if(atten < ADC_ATTEN_MIN || atten > ADC_ATTEN_MAX)
+    if (atten < ADC_ATTEN_MIN || atten > ADC_ATTEN_MAX) {
         mp_raise_ValueError(MP_ERROR_TEXT("invalid attenuation"));
+    }
 
     madc_obj_atten[self - &madc_obj[0]] = atten + 1;
 }
 static void mp_machine_adc_atten_set(machine_adc_obj_t *self, mp_int_t atten) {
-    mp_machine_adc_atten_set_helper(self,atten);
-    apply_self_adc_channel_atten(self,mp_machine_adc_atten_get_helper(self));
+    mp_machine_adc_atten_set_helper(self, atten);
+    apply_self_adc_channel_atten(self, mp_machine_adc_atten_get_helper(self));
 }
 
 
-mp_int_t mp_machine_adc_width_get_helper(const machine_adc_obj_t *self){
+mp_int_t mp_machine_adc_width_get_helper(const machine_adc_obj_t *self) {
     return self->block->bitwidth;
 }
 void mp_machine_adc_block_width_set_helper(machine_adc_block_obj_t *self, mp_int_t width) {
-    if(width < ADC_WIDTH_MIN || width > ADC_WIDTH_MAX)
+    if (width < ADC_WIDTH_MIN || width > ADC_WIDTH_MAX) {
         mp_raise_ValueError(MP_ERROR_TEXT("invalid bit-width"));
-    
+    }
+
     self->bitwidth = width;
-    DEBUG_printf("wd%d\n",width);
 }
 
 static void mp_machine_adc_width_set(machine_adc_obj_t *self, mp_int_t width) {
-    mp_machine_adc_block_width_set_helper(self->block,width);
-    apply_self_adc_channel_atten(self,mp_machine_adc_atten_get_helper(self));
+    mp_machine_adc_block_width_set_helper(self->block, width);
+    apply_self_adc_channel_atten(self, mp_machine_adc_atten_get_helper(self));
 }

@@ -74,7 +74,7 @@ typedef struct _machine_adc_obj_t {
     mp_obj_base_t base;
     machine_adc_block_obj_t *block;
     adc_channel_t channel_id;
-    gpio_num_t gpio_id; 
+    gpio_num_t gpio_id;
 } machine_adc_obj_t;
 
 extern machine_adc_block_obj_t madcblock_obj[];

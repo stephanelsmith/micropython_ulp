@@ -34,7 +34,7 @@
 static esp_err_t ensure_adc_calibration(machine_adc_block_obj_t *self, adc_atten_t atten);
 
 
-esp_err_t apply_self_adc_channel_atten(const machine_adc_obj_t *self, uint8_t atten){
+esp_err_t apply_self_adc_channel_atten(const machine_adc_obj_t *self, uint8_t atten) {
     adc_oneshot_chan_cfg_t config = {
         .atten = atten,
         .bitwidth = self->block->bitwidth,
@@ -50,15 +50,15 @@ mp_int_t madcblock_read_helper(machine_adc_block_obj_t *self, adc_channel_t chan
 }
 
 /*
-During testing, it turned out that the function `adc_cali_raw_to_voltage` does not account for the lower resolution, 
+During testing, it turned out that the function `adc_cali_raw_to_voltage` does not account for the lower resolution,
 instead it expects the full resolution value as an argument, hence the scaling applied here
 */
 mp_int_t madcblock_read_uv_helper(machine_adc_block_obj_t *self, adc_channel_t channel_id, adc_atten_t atten) {
     int raw = madcblock_read_helper(self, channel_id);
     int uv = 0;
 
-    check_esp_err(ensure_adc_calibration(self, atten)); 
-    check_esp_err(adc_cali_raw_to_voltage(self->calib[atten], (raw << (ADC_WIDTH_MAX-self->bitwidth)), &uv));
+    check_esp_err(ensure_adc_calibration(self, atten));
+    check_esp_err(adc_cali_raw_to_voltage(self->calib[atten], (raw << (ADC_WIDTH_MAX - self->bitwidth)), &uv));
     return (mp_int_t)uv * 1000;
 }
 
@@ -85,7 +85,6 @@ static esp_err_t ensure_adc_calibration(machine_adc_block_obj_t *self, adc_atten
     ret = adc_cali_create_scheme_line_fitting(&cali_config, &self->calib[atten]);
     #endif
 
-        
+
     return ret;
 }
-
