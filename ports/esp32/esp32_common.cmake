@@ -244,7 +244,7 @@ if(DEFINED ulp_embedded_sources)
     message("embedded ULP App sources: " ${ulp_embedded_sources} ",  deps: " ${ulp_depentants})
     ulp_embed_binary(${ulp_app_name} ${ulp_embedded_sources} ${ulp_depentants})
 
-    set(ULP_LD_DIR ${CMAKE_BINARY_DIR}/esp-idf/main_${IDF_TARGET}/ulp_embedded)
+    set(ULP_LD_DIR ${CMAKE_BINARY_DIR}/esp-idf/main/ulp_embedded)
     add_custom_command(
       OUTPUT ${CMAKE_BINARY_DIR}/esp32_ulpconst_qstr.h
       COMMAND python ${MICROPY_PORT_DIR}/esp32_ulp_qstr.py ${ULP_LD_DIR}/ulp_embedded.ld
